@@ -4,25 +4,34 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'counter_bloc.dart';
 
+class Wrapper extends StatelessWidget {
+  const Wrapper({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<CounterBloc>(
+          create: (context) => CounterBloc(), // CAN MAKE START FUNC ..add(CounterIncEvent()),
+        ),
+        BlocProvider<UserBloc>(
+          create: (context) => UserBloc(),
+        ),
+      ],
+      child: const MyHomePage(title: 'home page'),
+    );
+  }
+}
+
+
 class MyHomePage extends StatelessWidget {
   const MyHomePage({super.key, required this.title});
   final String title;
 
   @override
   Widget build(BuildContext context) {
-    final counterBloc = CounterBloc();
-    final userBloc = UserBloc();
 
-    return MultiBlocProvider(
-  providers: [
-    BlocProvider<CounterBloc>(
-      create: (context) => counterBloc, // CAN MAKE START FUNC ..add(CounterIncEvent()),
-),
-    BlocProvider<UserBloc>(
-      create: (context) => userBloc,
-    ),
-  ],
-  child: Scaffold(
+    return Scaffold(
             appBar: AppBar(
               backgroundColor: Theme.of(context).colorScheme.inversePrimary,
               title: Text(title),
@@ -35,7 +44,7 @@ class MyHomePage extends StatelessWidget {
                   children: <Widget>[
                     const Text('You have pushed the button this many times:'),
                     BlocBuilder<CounterBloc, int>( //Covered only Text, for re-rendering only text
-                      bloc: counterBloc,
+                      // bloc: counterBloc,
                       builder: (context, state){
                       //final bloc = BlocProvider.of<CounterBloc>(context);(
                         return Text(
@@ -44,7 +53,7 @@ class MyHomePage extends StatelessWidget {
                       }
                     ),
                     BlocBuilder<UserBloc,UserState>(
-                        bloc: userBloc,
+                        // bloc: userBloc,
                       builder: (context, state) {
                         final users = state.users;
                         final jobs = state.jobs;
@@ -62,13 +71,14 @@ class MyHomePage extends StatelessWidget {
 
                     ),
                     ElevatedButton(onPressed: (){
+                      final counterBloc = BlocProvider.of<CounterBloc>(context);
                       counterBloc.add(CounterDecEvent());
                     }, child: const Text('DECREMENT')),
                     ElevatedButton(onPressed: (){
-                      userBloc.add(UserGetUserEvent(counterBloc.state));
+                      // userBloc.add(UserGetUserEvent(counterBloc.state));
                     }, child: const Icon(Icons.person)),
                     ElevatedButton(onPressed: (){
-                      userBloc.add(UserGetUserJobsEvent(counterBloc.state));
+                      // userBloc.add(UserGetUserJobsEvent(counterBloc.state));
                     }, child: const Icon(Icons.work)),
                   ],
                 ),
@@ -77,12 +87,12 @@ class MyHomePage extends StatelessWidget {
 
             floatingActionButton: FloatingActionButton(
               onPressed: () {
-                counterBloc.add(CounterIncEvent());
+                // counterBloc.add(CounterIncEvent());
               },
               tooltip: 'Increment',
               child: const Icon(Icons.add),
             ),
-          ),
+
 );
   }
 }
