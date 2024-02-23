@@ -1,3 +1,4 @@
+import 'package:bloc_test/user_bloc/user_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -9,45 +10,73 @@ class MyHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bloc = CounterBloc();
+    final counterBloc = CounterBloc();
+    final userBloc = UserBloc();
 
-    return BlocProvider<CounterBloc>(
-      create: (context) => bloc, // CAN MAKE START FUNC ..add(CounterIncEvent()),
-      child: Scaffold(
+    return MultiBlocProvider(
+  providers: [
+    BlocProvider<CounterBloc>(
+      create: (context) => counterBloc, // CAN MAKE START FUNC ..add(CounterIncEvent()),
+),
+    BlocProvider<UserBloc>(
+      create: (context) => userBloc,
+    ),
+  ],
+  child: Scaffold(
             appBar: AppBar(
               backgroundColor: Theme.of(context).colorScheme.inversePrimary,
               title: Text(title),
             ),
 
-            body: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  const Text('You have pushed the button this many times:'),
-                  BlocBuilder<CounterBloc, int>( //Covered only Text, for re-rendering only text
-                    bloc: bloc,
-                    builder: (context, state){
-                    //final bloc = BlocProvider.of<CounterBloc>(context);(
-                      return Text(
-                      state.toString(),
-                      style: Theme.of(context).textTheme.headlineMedium,);
-                    }
-                  ),
-                  ElevatedButton(onPressed: (){
-                    bloc.add(CounterDecEvent());
-                  }, child: const Text('DECREMENT'))
-                ],
+            body: SafeArea(
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    const Text('You have pushed the button this many times:'),
+                    BlocBuilder<CounterBloc, int>( //Covered only Text, for re-rendering only text
+                      bloc: counterBloc,
+                      builder: (context, state){
+                      //final bloc = BlocProvider.of<CounterBloc>(context);(
+                        return Text(
+                        state.toString(),
+                        style: Theme.of(context).textTheme.headlineMedium,);
+                      }
+                    ),
+                    BlocBuilder<UserBloc,UserState>(
+                        bloc: userBloc,
+                      builder: (context, state) {
+                        return Column(
+
+                          children: [
+                            if (state is UserLoadingState)
+                              const CircularProgressIndicator(),
+                            if (state is UserLoadedState)
+                              ...state.users.map((e) => Text(e.name)),
+                          ],
+                        );
+                      },
+
+                    ),
+                    ElevatedButton(onPressed: (){
+                      counterBloc.add(CounterDecEvent());
+                    }, child: const Text('DECREMENT')),
+                    ElevatedButton(onPressed: (){
+                      userBloc.add(UserGetUserEvent(counterBloc.state));
+                    }, child: const Icon(Icons.person)),
+                  ],
+                ),
               ),
             ),
 
             floatingActionButton: FloatingActionButton(
               onPressed: () {
-                bloc.add(CounterIncEvent());
+                counterBloc.add(CounterIncEvent());
               },
               tooltip: 'Increment',
               child: const Icon(Icons.add),
             ),
           ),
-      );
+);
   }
 }
