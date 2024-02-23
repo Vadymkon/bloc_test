@@ -38,16 +38,16 @@ class MyHomePage extends StatelessWidget {
                         BlocBuilder<CounterBloc, int>( //Covered only Text, for re-rendering only text
                           // bloc: counterBloc,
                           builder: (context, state){
-                          final bloc = BlocProvider.of<UserBloc>(context);
+                          // final bloc = BlocProvider.of<UserBloc>(context);
                           //   final bloc = context.watch<UserBloc>();
-                          //   final bloc = context.select((UserBloc bloc) => bloc.state.jobs);
+                            final bloc = context.select((UserBloc bloc) => bloc.state.jobs);
                             return Column(
                               children: [
                                 Text(
                                 state.toString(),
                                 style: Theme.of(context).textTheme.headlineMedium,),
-                                if (bloc.state.jobs.isNotEmpty)
-                                  ...bloc.state.jobs.map((e) => Text(e.name)),
+                                if (bloc.isNotEmpty)
+                                  ...bloc.map((e) => Text(e.name)),
                               ],
                             );
                           }
