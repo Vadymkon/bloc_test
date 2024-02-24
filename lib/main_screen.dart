@@ -6,7 +6,7 @@ import 'counter_bloc.dart';
 
 
 class MyHomePage extends StatelessWidget {
-  const MyHomePage({super.key, required this.title});
+  const MyHomePage ({super.key, required this.title});
 
   final String title;
 
@@ -79,12 +79,12 @@ class MyHomePage extends StatelessWidget {
           ),
         ),
       ),
-      floatingActionButton: BlocListener<CounterBloc, int>(
+      floatingActionButton: BlocConsumer<CounterBloc, int>(
         bloc: counterBloc,
         listenWhen: (prev,curr) => prev > curr, //optimization of listening
         listener: (context, state) {
-          if (state == 0)
-          Scaffold.of(context).showBottomSheet
+          if (state == 0) {
+            Scaffold.of(context).showBottomSheet
             ((context) =>
               Container
                 (
@@ -92,11 +92,12 @@ class MyHomePage extends StatelessWidget {
                   width: double.infinity,
                   color: Colors.blue,
                   child: const Text('State is 0')));
+          }
         },
-        child: Column(
+        builder :(context,state) => Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-
+            Text(state.toString()),
             FloatingActionButton(
               onPressed: () {
                 // final counterBloc = context.read<CounterBloc>();

@@ -14,7 +14,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final counterBloc = CounterBloc();
 
     return MultiBlocProvider(
@@ -31,6 +30,9 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(
+          textTheme: const TextTheme(
+            bodyText2: TextStyle(fontSize: 33),
+            subtitle1: TextStyle(fontSize: 22),),
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),
