@@ -11,14 +11,15 @@ class MyHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final counterBloc = CounterBloc();
 
     return MultiBlocProvider(
   providers: [
     BlocProvider<CounterBloc>(
-      create: (context) => CounterBloc(), // CAN MAKE START FUNC ..add(CounterIncEvent()),
+      create: (context) => counterBloc, // CAN MAKE START FUNC ..add(CounterIncEvent()),
 ),
     BlocProvider<UserBloc>(
-      create: (context) => UserBloc(),
+      create: (context) => UserBloc(counterBloc),
     ),
   ],
   child: Builder(
@@ -36,18 +37,18 @@ class MyHomePage extends StatelessWidget {
                       children: <Widget>[
                         const Text('You have pushed the button this many times:'),
                         BlocBuilder<CounterBloc, int>( //Covered only Text, for re-rendering only text
-                          // bloc: counterBloc,
+                          bloc: counterBloc,
                           builder: (context, state){
                           // final bloc = BlocProvider.of<UserBloc>(context);
                           //   final bloc = context.watch<UserBloc>();
-                            final bloc = context.select((UserBloc bloc) => bloc.state.jobs);
+                          //   final bloc = context.select((UserBloc bloc) => bloc.state.jobs);
                             return Column(
                               children: [
                                 Text(
                                 state.toString(),
                                 style: Theme.of(context).textTheme.headlineMedium,),
-                                if (bloc.isNotEmpty)
-                                  ...bloc.map((e) => Text(e.name)),
+                                // if (bloc.isNotEmpty)
+                                //   ...bloc.map((e) => Text(e.name)),
                               ],
                             );
                           }
@@ -63,24 +64,24 @@ class MyHomePage extends StatelessWidget {
                                   const CircularProgressIndicator(),
                                 if (users.isNotEmpty)
                                   ...users.map((e) => Text(e.name)),
-                                // if (jobs.isNotEmpty)
-                                //   ...jobs.map((e) => Text(e.name)),
+                                if (jobs.isNotEmpty)
+                                  ...jobs.map((e) => Text(e.name)),
                               ],
                             );
                           },
 
                         ),
                         ElevatedButton(onPressed: (){
-                          final counterBloc = context.read<CounterBloc>();
+                          // final counterBloc = context.read<CounterBloc>();
                           counterBloc.add(CounterDecEvent());
                         }, child: const Text('DECREMENT')),
                         ElevatedButton(onPressed: (){
-                          final counterBloc = context.read<CounterBloc>();
+                          // final counterBloc = context.read<CounterBloc>();
                             final userBloc = context.read<UserBloc>();
                            userBloc.add(UserGetUserEvent(counterBloc.state));
                         }, child: const Icon(Icons.person)),
                         ElevatedButton(onPressed: (){
-                          final counterBloc = context.read<CounterBloc>();
+                          // final counterBloc = context.read<CounterBloc>();
                           final userBloc = context.read<UserBloc>();
                           userBloc.add(UserGetUserJobsEvent(counterBloc.state));
                         }, child: const Icon(Icons.work)),
@@ -91,7 +92,7 @@ class MyHomePage extends StatelessWidget {
 
                 floatingActionButton: FloatingActionButton(
                   onPressed: () {
-                    final counterBloc = context.read<CounterBloc>();
+                    // final counterBloc = context.read<CounterBloc>();
                      counterBloc.add(CounterIncEvent());
                   },
                   tooltip: 'Increment',
