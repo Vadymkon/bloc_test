@@ -5,8 +5,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'counter_bloc.dart';
 
 
-class MyHomePage extends StatelessWidget {
-  const MyHomePage ({super.key, required this.title});
+class MyHomePage2 extends StatelessWidget {
+  const MyHomePage2 ({super.key, required this.title});
 
   final String title;
 

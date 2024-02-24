@@ -1,9 +1,11 @@
+import 'package:bloc_test/search_bloc/search_bloc.dart';
 import 'package:bloc_test/user_bloc/user_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'counter_bloc.dart';
 import 'main_screen.dart';
+import 'new_main_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -26,6 +28,9 @@ class MyApp extends StatelessWidget {
           create: (context) => UserBloc(counterBloc),
           lazy: false,
         ),
+        BlocProvider<SearchBloc>(
+          create: (context) => SearchBloc(),
+        ),
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
@@ -36,7 +41,7 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),
-        home: const MyHomePage(title: 'Flutter Demo Home Page'),
+        home: const MyHomePage(),
       ),
     );
   }
